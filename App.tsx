@@ -13,6 +13,9 @@ const App: React.FC = () => {
   const [customPrompt, setCustomPrompt] = useState(DEFAULT_PROMPT);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
+  // Safe check for API Key presence
+  const hasApiKey = !!(typeof process !== 'undefined' && process.env && process.env.API_KEY);
+
   const handleImageSelected = (image: ImageFile) => {
     setSourceImage(image);
     setResultImage(null);
@@ -60,7 +63,7 @@ const App: React.FC = () => {
           </div>
           <div className="flex items-center text-xs text-gray-500 gap-4">
              <span className="hidden sm:inline-block">Powered by Gemini 2.5 Flash Image</span>
-             {process.env.API_KEY ? (
+             {hasApiKey ? (
                <span className="flex items-center text-emerald-500 gap-1.5 bg-emerald-500/10 px-2 py-1 rounded-full border border-emerald-500/20">
                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
                  API Connected
@@ -80,7 +83,7 @@ const App: React.FC = () => {
         {/* Intro / Empty State */}
         {!sourceImage && (
           <div className="max-w-3xl mx-auto text-center mb-12 animate-in fade-in slide-in-from-bottom-4 duration-700">
-            <h2 className="text-4xl sm:text-5xl font-extrabold text-white mb-6 tracking-tight">
+            <h2 className="text-4xl sm:text-5xl font-extrabold text-white mb-6 tracking-tight leading-[1.1]">
               Remove Watermark <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-400 to-purple-400">
                 Keep the Background
@@ -95,7 +98,7 @@ const App: React.FC = () => {
             
             <div className="mt-12 grid grid-cols-1 sm:grid-cols-3 gap-6 text-left">
               {[
-                { title: "Targeted Removal", desc: "Specifically targets the bottom-right watermark." },
+                { title: "Targeted Removal", desc: "Specifically targets the bottom-right watermark icon." },
                 { title: "Background Safe", desc: "Your image background stays exactly as it is." },
                 { title: "Seamless Inpainting", desc: "Fills the tiny gap with matching texture." }
               ].map((item, i) => (
@@ -149,7 +152,6 @@ const App: React.FC = () => {
                       className="w-full py-3 text-base"
                       isLoading={appState === AppState.PROCESSING}
                       icon={<Wand2 size={18} />}
-                      disabled={appState === AppState.SUCCESS && resultImage !== null} // Disable if already done, unless they change prompt? Actually let's allow re-run if they change prompt, but simplest is to keep enabled. Let's just keep enabled.
                     >
                       {appState === AppState.PROCESSING ? 'Removing...' : 'Remove Watermark'}
                     </Button>
@@ -157,7 +159,7 @@ const App: React.FC = () => {
                 </div>
               </div>
 
-               {/* Source Preview Small (If result is shown, otherwise source is in main area) */}
+               {/* Source Preview Small */}
                {resultImage && (
                  <div className="bg-gray-900 border border-gray-800 rounded-2xl p-4 opacity-75 hover:opacity-100 transition-opacity">
                     <p className="text-xs font-semibold text-gray-400 mb-3 uppercase tracking-wider">Original Source</p>
@@ -193,7 +195,7 @@ const App: React.FC = () => {
                   {/* Overlay Helper */}
                   <div className="absolute inset-0 pointer-events-none flex items-end justify-end p-8 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                      <div className="bg-brand-500/20 border-2 border-brand-500 border-dashed w-32 h-32 rounded-lg flex items-center justify-center text-brand-200 text-xs font-medium text-center backdrop-blur-sm">
-                        Target Area <br/>(Approx)
+                        Target Area <br/>(Watermark Location)
                      </div>
                   </div>
                 </div>
