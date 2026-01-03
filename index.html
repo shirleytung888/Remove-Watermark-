@@ -6,9 +6,20 @@
     <title>Gemini Watermark Eraser</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-      // Shim process.env for the browser to prevent crashes
-      window.process = window.process || { env: {} };
-      
+      // ---------------------------------------------------------
+      // 👇 FIX STARTS HERE
+      // We manually add the key so the browser can find it.
+      // Replace "PASTE_YOUR_AIZA_KEY_HERE" with your actual key.
+      // ---------------------------------------------------------
+      window.process = {
+        env: {
+          NEXT_PUBLIC_GEMINI_API_KEY: "PASTE_YOUR_AIZA_KEY_HERE",
+          // If your code uses a different name (like GEMINI_API_KEY), 
+          // change the name above to match exactly what is in index.tsx
+        }
+      };
+      // ☝️ FIX ENDS HERE
+
       tailwind.config = {
         theme: {
           extend: {
