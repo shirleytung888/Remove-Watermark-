@@ -1,0 +1,5 @@
+{
+  "name": "Gemini Watermark Eraser",
+  "description": "A specialized tool using Gemini 2.5 Flash Image to intelligently remove watermarks, specifically the 'star' icon, while preserving the original background and image quality.",
+  "requestFramePermissions": []
+}
